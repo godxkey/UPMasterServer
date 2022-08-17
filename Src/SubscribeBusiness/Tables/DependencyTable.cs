@@ -2,7 +2,7 @@ using FreeSql;
 using FreeSql.DatabaseModel;
 using FreeSql.DataAnnotations;
 
-namespace UPMasterServer {
+namespace UPMasterServer.SubscribeBusiness {
 
     [Table]
     public class DependencyTable {
