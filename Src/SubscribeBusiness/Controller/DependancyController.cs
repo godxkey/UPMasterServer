@@ -49,9 +49,9 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
             var server = globalFacades.Server;
 
             server.GetListen("/get_test", async (req, res) => {
+                System.Console.WriteLine("get_test");
                 await TaskHelper.AsyncEmptyAwait;
                 res.StatusCode = 200;
-                System.Console.WriteLine("get_test");
                 res.SendBuffer(new byte[1] { 127 });
             });
 
