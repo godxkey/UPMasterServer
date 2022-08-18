@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using System.Text;
 using JackFrame.HttpNS;
 using UPMasterServer.Facades;
 using UPMasterServer.SubscribeBusiness.Facades;
@@ -24,11 +26,21 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
             conn.SQL.Select<DependencyTable>();
 
             // Dao
-            DependencyDao dependencyDao = new DependencyDao();
-            dependencyDao.Inject(conn.SQL);
+            DependencyRemoteDao dependencyRemoteDao = new DependencyRemoteDao();
+            dependencyRemoteDao.Inject(conn.SQL);
+
+            DependencyLocalDao dependencyLocalDao = new DependencyLocalDao();
+            DependencyRepo dependencyRepo = new DependencyRepo();
+            dependencyRepo.Inject(dependencyRemoteDao, dependencyLocalDao);
+
+            AddPackageBo addPackageBo = new AddPackageBo();
+            addPackageBo.Inject(subscribeFacades);
+
+            AllBo allBo = new AllBo();
+            allBo.Inject(addPackageBo);
 
             // Facades
-            subscribeFacades.Inject(dependencyDao);
+            subscribeFacades.Inject(allBo, dependencyRepo);
 
         }
 
@@ -36,12 +48,26 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
 
             var server = globalFacades.Server;
 
-            server.GetListen("/get_packages", (req, res) => {
+            server.GetListen("/get_packages", async (req, res) => {
                 Console.WriteLine("get");
+                var dao = subscribeFacades.DependencyDao;
+                // PERF: 分页
+                var all = await dao.GetAllAsync();
+                try {
+                    string jsonStr = JsonConvert.SerializeObject(all);
+                    res.StatusCode = 200;
+                    await res.SendUTF8StringAsync(jsonStr);
+                } catch {
+                    System.Console.WriteLine("Get Packages Error");
+                    res.StatusCode = 400;
+                    res.SendBuffer(new byte[0]);
+                }
             });
 
-            server.PostListen("/add_package", (req, res) => {
-                Console.WriteLine("add");
+            server.PostListen("/add_package", async (req, res) => {
+                await TaskHelper.AsyncEmptyAwait;
+                var bo = subscribeFacades.AllBo.AddPackageBo;
+                bo.OnAddPackage(req, res);
             });
 
             server.PutListen("/update_package", (req, res) => {
