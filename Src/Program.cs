@@ -8,7 +8,7 @@ namespace UPMasterServer {
     class Program {
 
         static void Main(string[] args) {
-            
+
             Console.WriteLine("Help:");
             Console.WriteLine("args[0] - mysql host");
             Console.WriteLine("args[1] - mysql user");
@@ -32,19 +32,22 @@ namespace UPMasterServer {
 
             // ==== Controller ====
             DependancyController dependancyController = new DependancyController();
-            
+
             dependancyController.Inject(globalFacades);
 
-            dependancyController.Init();
+            try {
+                dependancyController.Init();
+                System.Console.WriteLine($"http Listening: {httpPort}");
+            } catch {
+                System.Console.WriteLine("Init Error");
+            }
 
-            System.Console.WriteLine($"http Listening: {httpPort}");
-
-            while(!Console.ReadLine().StartsWith("exit")) {
+            while (!Console.ReadLine().StartsWith("exit")) {
 
             }
 
             dependancyController.TearDown();
-            
+
         }
 
     }
