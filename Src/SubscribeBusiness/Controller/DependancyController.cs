@@ -51,6 +51,7 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
             server.GetListen("/get_test", async (req, res) => {
                 await TaskHelper.AsyncEmptyAwait;
                 res.StatusCode = 200;
+                System.Console.WriteLine("get_test");
                 res.SendBuffer(new byte[1] { 127 });
             });
 
