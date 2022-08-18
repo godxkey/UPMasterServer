@@ -48,6 +48,12 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
 
             var server = globalFacades.Server;
 
+            server.GetListen("/get_test", async (req, res) => {
+                await TaskHelper.AsyncEmptyAwait;
+                res.StatusCode = 200;
+                res.SendBuffer(new byte[1] { 127 });
+            });
+
             server.GetListen("/get_packages", async (req, res) => {
                 Console.WriteLine("get");
                 var dao = subscribeFacades.DependencyDao;
