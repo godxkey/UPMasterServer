@@ -17,7 +17,7 @@ namespace UPMasterServer.SubscribeBusiness {
 
         public AddPackageBo() {
             this.lockObj = new object();
-            this.buffer = new byte[512];
+            this.buffer = new byte[4096];
         }
 
         public void Inject(SubscribeFacades subscribeFacades) {
