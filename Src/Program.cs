@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using JackFrame.HttpNS;
 using UPMasterServer.Facades;
 using UPMasterServer.SubscribeBusiness.Controller;
@@ -7,7 +10,7 @@ namespace UPMasterServer {
 
     class Program {
 
-        static void Main(string[] args) {
+        static async Task Main(string[] args) {
 
             Console.WriteLine("Help:");
             Console.WriteLine("args[0] - mysql host");
@@ -42,11 +45,18 @@ namespace UPMasterServer {
                 System.Console.WriteLine("Init Error");
             }
 
-            while (!Console.ReadLine().StartsWith("exit")) {
-
+            string path = Path.Combine(Environment.CurrentDirectory, "exit.signal");
+            System.Console.WriteLine("Create A File To Exit Program: " + path);
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            while (!cancellationTokenSource.IsCancellationRequested) {
+                await Task.Delay(34);
+                if (File.Exists(path)) {
+                    break;
+                }
             }
 
             dependancyController.TearDown();
+            File.Delete(path);
 
         }
 
