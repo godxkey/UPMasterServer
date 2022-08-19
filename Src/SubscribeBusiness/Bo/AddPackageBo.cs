@@ -43,6 +43,7 @@ namespace UPMasterServer.SubscribeBusiness {
                         _ = dao.InsertAsync(table).Result;
                         PLog.Log($"[Add Package]recv: {dataStr}");
                     } else {
+                        table.id = old.id;
                         _ = dao.UpdateAsync(table).Result;
                         PLog.Log($"[Update Package]recv: {dataStr}");
                     }
