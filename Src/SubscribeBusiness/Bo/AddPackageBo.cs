@@ -30,11 +30,12 @@ namespace UPMasterServer.SubscribeBusiness {
                     var arr = req.ReadBuffer(buffer);
                     string dataStr = Encoding.UTF8.GetString(arr);
                     System.Console.WriteLine($"[Add Package]recv: {dataStr}");
-                    var msg = JsonConvert.DeserializeObject<SubscribeAddPackageReqMessage>(dataStr);
+                    var msg = JsonConvert.DeserializeObject<GenericMessage>(dataStr);
+                    var data = (SubscribeAddPackageReqMessage)msg.body["data"];
                     var table = new DependencyTable() {
-                        packageName = msg.packageName,
-                        gitUrl = msg.gitUrl,
-                        branchOrTag = msg.branchOrTag
+                        packageName = data.packageName,
+                        gitUrl = data.gitUrl,
+                        branchOrTag = data.branchOrTag
                     };
 
                     var dao = subscribeFacades.DependencyDao;
