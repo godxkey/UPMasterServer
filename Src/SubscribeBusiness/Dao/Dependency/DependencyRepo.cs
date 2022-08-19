@@ -18,6 +18,7 @@ namespace UPMasterServer.SubscribeBusiness {
 
         public void Init() {
             this.localDao.SetAll(this.remoteDao.GetAllAsync().Result);
+            this.localDao.Version = this.remoteDao.Version;
         }
 
         public async Task<List<DependencyTable>> GetAllAsync() {
