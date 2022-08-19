@@ -18,6 +18,10 @@ namespace UPMasterServer.SubscribeBusiness {
             this.localDao = localDao;
         }
 
+        public void Init() {
+            this.dao.SetAll(this.localDao.GetAllAsync().Result);
+        }
+
         public async Task<List<DependencyTable>> GetAllAsync() {
             if (dao.Version == localDao.Version) {
                 return await localDao.GetAllAsync();

@@ -7,8 +7,8 @@ namespace UPMasterServer.SubscribeBusiness.Facades {
         AllBo allBo;
         public AllBo AllBo => allBo;
 
-        IDependencyDao dependencyDao;
-        public IDependencyDao DependencyDao {
+        DependencyRepo dependencyDao;
+        public DependencyRepo DependencyDao {
             get { lock (lockObj) { return dependencyDao; } }
         }
 
@@ -16,7 +16,7 @@ namespace UPMasterServer.SubscribeBusiness.Facades {
             this.lockObj = new object();
         }
 
-        public void Inject(AllBo allBo, IDependencyDao dependencyDao) {
+        public void Inject(AllBo allBo, DependencyRepo dependencyDao) {
             this.allBo = allBo;
             this.dependencyDao = dependencyDao;
         }

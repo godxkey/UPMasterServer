@@ -46,6 +46,8 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
 
         public void Init() {
 
+            subscribeFacades.DependencyDao.Init();
+
             var server = globalFacades.Server;
 
             server.GetListen("/get_test", async (req, res) => {
