@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace UPMasterServer.SubscribeBusiness {
 
-    public class DependencyRepo : IDependencyDao {
-
-        int IDependencyDao.Version { get; set; }
+    public class DependencyRepo {
 
         IDependencyDao remoteDao;
         IDependencyDao localDao;
@@ -66,6 +64,7 @@ namespace UPMasterServer.SubscribeBusiness {
                 await localDao.UpdateAsync(table);
                 remoteDao.Version += 1;
                 localDao.Version = remoteDao.Version;
+                PLog.Log("UpdateAsync: " + table.packageName);
             }
             return count;
         }

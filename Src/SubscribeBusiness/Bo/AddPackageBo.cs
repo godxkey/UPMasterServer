@@ -29,7 +29,7 @@ namespace UPMasterServer.SubscribeBusiness {
                 try {
                     var arr = req.ReadBuffer(buffer);
                     string dataStr = Encoding.UTF8.GetString(arr);
-                    System.Console.WriteLine($"[Add Package]recv: {dataStr}");
+                    PLog.Log($"[Add Package]recv: {dataStr}");
                     var data = JsonConvert.DeserializeObject<SubscribeAddPackageReqMessage>(dataStr);
                     // data = (SubscribeAddPackageReqMessage)msg.body["data"];
                     var table = new DependencyTable() {
@@ -48,7 +48,7 @@ namespace UPMasterServer.SubscribeBusiness {
                     res.StatusCode = 200;
                     res.SendBuffer(new byte[0]);
                 } catch(Exception ex) {
-                    System.Console.WriteLine("Add Package Error: " + ex.ToString());
+                    PLog.Error("Add Package Error: " + ex.ToString());
                     res.StatusCode = 400;
                     res.SendBuffer(new byte[0]);
                 }

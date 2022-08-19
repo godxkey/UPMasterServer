@@ -51,14 +51,13 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
             var server = globalFacades.Server;
 
             server.GetListen("/get_test", async (req, res) => {
-                System.Console.WriteLine("get_test");
+                PLog.Log("get_test");
                 await TaskHelper.AsyncEmptyAwait;
                 res.StatusCode = 200;
                 res.SendBuffer(new byte[1] { 127 });
             });
 
             server.GetListen("/get_packages", async (req, res) => {
-                Console.WriteLine("get");
                 var dao = subscribeFacades.DependencyDao;
                 // PERF: 分页
                 var all = await dao.GetAllAsync();
@@ -67,7 +66,7 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
                     res.StatusCode = 200;
                     await res.SendUTF8StringAsync(jsonStr);
                 } catch {
-                    System.Console.WriteLine("Get Packages Error");
+                    PLog.Error("Get Packages Error");
                     res.StatusCode = 400;
                     res.SendBuffer(new byte[0]);
                 }
@@ -80,11 +79,11 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
             });
 
             server.PutListen("/update_package", (req, res) => {
-                Console.WriteLine("update");
+                PLog.Log("update");
             });
 
             server.DeleteListen("/delete_package", (req, res) => {
-                Console.WriteLine("delete");
+                PLog.Log("delete");
             });
 
             server.Start();

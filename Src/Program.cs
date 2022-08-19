@@ -12,10 +12,13 @@ namespace UPMasterServer {
 
         static async Task Main(string[] args) {
 
-            Console.WriteLine("Help:");
-            Console.WriteLine("args[0] - mysql host");
-            Console.WriteLine("args[1] - mysql user");
-            Console.WriteLine("args[2] - mysql pwd");
+            {
+                Action<object> log = Console.WriteLine;
+                log.Invoke("Help:");
+                log.Invoke("args[0] - mysql host");
+                log.Invoke("args[1] - mysql user");
+                log.Invoke("args[2] - mysql pwd");
+            }
 
             // ==== SQL ====
             string ip = args[0];
@@ -40,13 +43,13 @@ namespace UPMasterServer {
 
             try {
                 dependancyController.Init();
-                System.Console.WriteLine($"http Listening: {httpPort}");
-            } catch {
-                System.Console.WriteLine("Init Error");
+                PLog.Log($"http Listening: {httpPort}");
+            } catch (Exception ex) {
+                PLog.Error("Init Error: " + ex.ToString());
             }
 
             string path = Path.Combine(Environment.CurrentDirectory, "exit.signal");
-            System.Console.WriteLine("Create A File To Exit Program: " + path);
+            PLog.Log("Create A File To Exit Program: " + path);
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             while (!cancellationTokenSource.IsCancellationRequested) {
                 await Task.Delay(34);

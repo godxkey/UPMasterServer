@@ -21,7 +21,8 @@ namespace UPMasterServer.SubscribeBusiness {
         }
 
         public async Task<int> InsertAsync(DependencyTable table) {
-            return await sql.Insert(table).ExecuteAffrowsAsync();
+            return await sql.Insert(table)
+                            .ExecuteAffrowsAsync();
         }
 
         public void SetAll(List<DependencyTable> all) {
@@ -30,23 +31,27 @@ namespace UPMasterServer.SubscribeBusiness {
 
         public async Task<int> UpdateAsync(DependencyTable table) {
             return await sql.Update<DependencyTable>()
-            .Set(old => old.packageName, table.packageName)
-            .Set(old => old.branchOrTag, table.branchOrTag)
-            .Set(old => old.gitUrl, table.gitUrl)
-            .Where(old => old.id == table.id)
-            .ExecuteAffrowsAsync();
+                            .Set(old => old.branchOrTag, table.branchOrTag)
+                            .Set(old => old.gitUrl, table.gitUrl)
+                            .Where(old => old.id == table.id)
+                            .ExecuteAffrowsAsync();
         }
 
         public async Task<int> RemoveAsync(DependencyTable table) {
-            return await sql.Delete<DependencyTable>().Where(value => value.id == table.id).ExecuteAffrowsAsync();
+            return await sql.Delete<DependencyTable>()
+                            .Where(value => value.id == table.id)
+                            .ExecuteAffrowsAsync();
         }
 
         public async Task<List<DependencyTable>> GetAllAsync() {
-            return await sql.Select<DependencyTable>().ToListAsync();
+            return await sql.Select<DependencyTable>()
+                            .ToListAsync();
         }
 
         public async Task<DependencyTable> FindByPackageNameAsync(string packageName) {
-            return await sql.Select<DependencyTable>().Where(value => value.packageName == packageName).FirstAsync();
+            return await sql.Select<DependencyTable>()
+                            .Where(value => value.packageName == packageName)
+                            .FirstAsync();
         }
     }
 
