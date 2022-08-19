@@ -29,7 +29,6 @@ namespace UPMasterServer.SubscribeBusiness {
                 try {
                     var arr = req.ReadBuffer(buffer);
                     string dataStr = Encoding.UTF8.GetString(arr);
-                    PLog.Log($"[Add Package]recv: {dataStr}");
                     var data = JsonConvert.DeserializeObject<SubscribeAddPackageReqMessage>(dataStr);
                     // data = (SubscribeAddPackageReqMessage)msg.body["data"];
                     var table = new DependencyTable() {
@@ -42,12 +41,14 @@ namespace UPMasterServer.SubscribeBusiness {
                     var old = dao.FindByPackageNameAsync(table.packageName).Result;
                     if (old == null) {
                         _ = dao.InsertAsync(table).Result;
+                        PLog.Log($"[Add Package]recv: {dataStr}");
                     } else {
                         _ = dao.UpdateAsync(table).Result;
+                        PLog.Log($"[Update Package]recv: {dataStr}");
                     }
                     res.StatusCode = 200;
                     res.SendBuffer(new byte[0]);
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     PLog.Error("Add Package Error: " + ex.ToString());
                     res.StatusCode = 400;
                     res.SendBuffer(new byte[0]);
