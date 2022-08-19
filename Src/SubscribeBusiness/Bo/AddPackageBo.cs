@@ -30,8 +30,8 @@ namespace UPMasterServer.SubscribeBusiness {
                     var arr = req.ReadBuffer(buffer);
                     string dataStr = Encoding.UTF8.GetString(arr);
                     System.Console.WriteLine($"[Add Package]recv: {dataStr}");
-                    var msg = JsonConvert.DeserializeObject<GenericMessage>(dataStr);
-                    var data = (SubscribeAddPackageReqMessage)msg.body["data"];
+                    var data = JsonConvert.DeserializeObject<SubscribeAddPackageReqMessage>(dataStr);
+                    // data = (SubscribeAddPackageReqMessage)msg.body["data"];
                     var table = new DependencyTable() {
                         packageName = data.packageName,
                         gitUrl = data.gitUrl,
