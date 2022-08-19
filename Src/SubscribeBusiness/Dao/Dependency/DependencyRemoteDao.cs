@@ -29,7 +29,12 @@ namespace UPMasterServer.SubscribeBusiness {
         }
 
         public async Task<int> UpdateAsync(DependencyTable table) {
-            return await sql.Update<DependencyTable>(table).Where(value => value.id == table.id).ExecuteAffrowsAsync();
+            return await sql.Update<DependencyTable>()
+            .Set(old => old.packageName, table.packageName)
+            .Set(old => old.branchOrTag, table.branchOrTag)
+            .Set(old => old.gitUrl, table.gitUrl)
+            .Where(old => old.id == table.id)
+            .ExecuteAffrowsAsync();
         }
 
         public async Task<int> RemoveAsync(DependencyTable table) {
