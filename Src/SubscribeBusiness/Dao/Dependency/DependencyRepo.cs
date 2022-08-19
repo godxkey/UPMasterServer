@@ -8,29 +8,29 @@ namespace UPMasterServer.SubscribeBusiness {
 
         int IDependencyDao.Version { get; set; }
 
-        IDependencyDao dao;
+        IDependencyDao remoteDao;
         IDependencyDao localDao;
 
         public DependencyRepo() { }
 
         public void Inject(IDependencyDao dao, IDependencyDao localDao) {
-            this.dao = dao;
+            this.remoteDao = dao;
             this.localDao = localDao;
         }
 
         public void Init() {
-            this.dao.SetAll(this.localDao.GetAllAsync().Result);
+            this.localDao.SetAll(this.remoteDao.GetAllAsync().Result);
         }
 
         public async Task<List<DependencyTable>> GetAllAsync() {
-            if (dao.Version == localDao.Version) {
+            if (remoteDao.Version == localDao.Version) {
                 return await localDao.GetAllAsync();
             } else {
-                var list = await dao.GetAllAsync();
+                var list = await remoteDao.GetAllAsync();
                 if (list != null) {
                     localDao.SetAll(list);
-                    dao.Version += 1;
-                    localDao.Version = dao.Version;
+                    remoteDao.Version += 1;
+                    localDao.Version = remoteDao.Version;
                 }
                 return list;
             }
@@ -41,44 +41,44 @@ namespace UPMasterServer.SubscribeBusiness {
         }
 
         public async Task<int> InsertAsync(DependencyTable table) {
-            int count = await dao.InsertAsync(table);
+            int count = await remoteDao.InsertAsync(table);
             if (count > 0) {
                 await localDao.InsertAsync(table);
-                dao.Version += 1;
-                localDao.Version = dao.Version;
+                remoteDao.Version += 1;
+                localDao.Version = remoteDao.Version;
             }
             return count;
         }
 
         public async Task<int> RemoveAsync(DependencyTable table) {
-            int count = await dao.RemoveAsync(table);
+            int count = await remoteDao.RemoveAsync(table);
             if (count > 0) {
                 await localDao.RemoveAsync(table);
-                dao.Version += 1;
-                localDao.Version = dao.Version;
+                remoteDao.Version += 1;
+                localDao.Version = remoteDao.Version;
             }
             return count;
         }
 
         public async Task<int> UpdateAsync(DependencyTable table) {
-            int count = await dao.UpdateAsync(table);
+            int count = await remoteDao.UpdateAsync(table);
             if (count > 0) {
                 await localDao.UpdateAsync(table);
-                dao.Version += 1;
-                localDao.Version = dao.Version;
+                remoteDao.Version += 1;
+                localDao.Version = remoteDao.Version;
             }
             return count;
         }
 
         public async Task<DependencyTable> FindByPackageNameAsync(string packageName) {
-            if (dao.Version == localDao.Version) {
+            if (remoteDao.Version == localDao.Version) {
                 return await localDao.FindByPackageNameAsync(packageName);
             } else {
-                var table = await dao.FindByPackageNameAsync(packageName);
+                var table = await remoteDao.FindByPackageNameAsync(packageName);
                 if (table != null) {
                     await localDao.InsertAsync(table);
-                    dao.Version += 1;
-                    localDao.Version = dao.Version;
+                    remoteDao.Version += 1;
+                    localDao.Version = remoteDao.Version;
                 }
                 return table;
             }
