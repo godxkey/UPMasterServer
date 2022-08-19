@@ -23,9 +23,11 @@ namespace UPMasterServer.SubscribeBusiness {
                 return await localDao.GetAllAsync();
             } else {
                 var list = await dao.GetAllAsync();
-                localDao.SetAll(list);
-                dao.Version += 1;
-                localDao.Version = dao.Version;
+                if (list != null) {
+                    localDao.SetAll(list);
+                    dao.Version += 1;
+                    localDao.Version = dao.Version;
+                }
                 return list;
             }
         }
@@ -36,25 +38,31 @@ namespace UPMasterServer.SubscribeBusiness {
 
         public async Task<int> InsertAsync(DependencyTable table) {
             int count = await dao.InsertAsync(table);
-            await localDao.InsertAsync(table);
-            dao.Version += 1;
-            localDao.Version = dao.Version;
+            if (count > 0) {
+                await localDao.InsertAsync(table);
+                dao.Version += 1;
+                localDao.Version = dao.Version;
+            }
             return count;
         }
 
         public async Task<int> RemoveAsync(DependencyTable table) {
             int count = await dao.RemoveAsync(table);
-            await localDao.RemoveAsync(table);
-            dao.Version += 1;
-            localDao.Version = dao.Version;
+            if (count > 0) {
+                await localDao.RemoveAsync(table);
+                dao.Version += 1;
+                localDao.Version = dao.Version;
+            }
             return count;
         }
 
         public async Task<int> UpdateAsync(DependencyTable table) {
             int count = await dao.UpdateAsync(table);
-            await localDao.UpdateAsync(table);
-            dao.Version += 1;
-            localDao.Version = dao.Version;
+            if (count > 0) {
+                await localDao.UpdateAsync(table);
+                dao.Version += 1;
+                localDao.Version = dao.Version;
+            }
             return count;
         }
 
@@ -63,9 +71,11 @@ namespace UPMasterServer.SubscribeBusiness {
                 return await localDao.FindByPackageNameAsync(packageName);
             } else {
                 var table = await dao.FindByPackageNameAsync(packageName);
-                await localDao.InsertAsync(table);
-                dao.Version += 1;
-                localDao.Version = dao.Version;
+                if (table != null) {
+                    await localDao.InsertAsync(table);
+                    dao.Version += 1;
+                    localDao.Version = dao.Version;
+                }
                 return table;
             }
         }
