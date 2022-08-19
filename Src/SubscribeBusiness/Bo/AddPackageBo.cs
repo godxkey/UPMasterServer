@@ -45,8 +45,8 @@ namespace UPMasterServer.SubscribeBusiness {
                     }
                     res.StatusCode = 200;
                     res.SendBuffer(new byte[0]);
-                } catch {
-                    System.Console.WriteLine("Add Package Error");
+                } catch(Exception ex) {
+                    System.Console.WriteLine("Add Package Error: " + ex.ToString());
                     res.StatusCode = 400;
                     res.SendBuffer(new byte[0]);
                 }

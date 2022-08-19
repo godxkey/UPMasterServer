@@ -73,7 +73,6 @@ namespace UPMasterServer.SubscribeBusiness.Controller {
 
             server.PostListen("/add_package", async (req, res) => {
                 await TaskHelper.AsyncEmptyAwait;
-                System.Console.WriteLine("add package");
                 var bo = subscribeFacades.AllBo.AddPackageBo;
                 bo.OnAddPackage(req, res);
             });
